@@ -9,7 +9,7 @@ If you use this repository or the dataset associated with it, kindly consider ci
 
 ## DATASETS
 
-We study the method on [BinMov23: Binaural Dataset for Source Position Estimation with Head Rotation and Moving Listeners](https://doi.org/10.5281/zenodo.7689063).
+We study the method on [BinMov2023: Binaural Dataset for Source Position Estimation with Head Rotation and Moving Listeners](https://doi.org/10.5281/zenodo.7689063).
 
 
 ## Getting Started
