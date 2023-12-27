@@ -3,7 +3,7 @@
 
 This is a repository implementing the methods described in the following paper:
 
-D.A. Krause, G. Garcia-Barrios, A. Politis, A. Mesaros, [Binaural Sound Source Distance Estimation and Localization for a Moving Listener](https://ieeexplore.ieee.org/document/10372100)
+D.A. Krause, G. García-Barrios, A. Politis, A. Mesaros, [Binaural Sound Source Distance Estimation and Localization for a Moving Listener](https://ieeexplore.ieee.org/document/10372100)
 
 If you use this repository or the dataset associated with it, kindly consider citing the abovementioned paper.
 
