@@ -2,7 +2,7 @@
 Copyright (c) 2021 Tampere University and its licensors
 All rights reserved.
 
-Permission is hereby granted, without written agreement and without license or royalty fees, to use and copy the code present in the GitHub repository with the handle doa-net, (“Work”) described in the paper with title "Differentiable Tracking-Based Training of Deep Learning Sound Source Localizers" at WASPAA 2021 and composed of files with code in the Python programming language. This grant is only for experimental and non-commercial purposes, provided that the copyright notice in its entirety appear in all copies of this Work, and the original source of this Work, Audio Research Group at Tampere University, is acknowledged in any publication that reports research using this Work.
+Permission is hereby granted, without written agreement and without license or royalty fees, to use and copy the code present in the GitHub repository with the handle     Moving-Binaural-SDEL, (“Work”) described in the paper with title "Binaural Sound Source Distance Estimation and Localization for a Moving Listener" at IEEE/ACM Transactions on Audio Speech and Language Processing and composed of files with code in the Python programming language. This grant is only for experimental and non-commercial purposes, provided that the copyright notice in its entirety appear in all copies of this Work, and the original source of this Work, Audio Research Group at Tampere University, is acknowledged in any publication that reports research using this Work.
 
 Any commercial use of the Work or any part thereof is strictly prohibited.
 Commercial use include, but is not limited to:
