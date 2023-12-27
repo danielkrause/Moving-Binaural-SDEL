@@ -21,6 +21,7 @@ This repository consists of multiple Python scripts described below.
 * The `cls_data_generator.py` script provides feature + label data in generator mode for training.
 * The `models.py` script implements the different model architectures related to the paper mentioned above.
 * The `cls_metric.py` script implements the metrics for localization and distance estimation.
+* The `rnd_files.npy` is a file containing an exemplary random shuffle of the dataset indices (used for repeatability between experiments). Can changed for a different one.
 * The `train_doa_sde_joint.py` is a wrapper script that trains SDEL models with a single task approach.
 * The `train_doa_sde_joint_multi.py` is a wrapper script that trains SDEL models with a multi task approach.
 
