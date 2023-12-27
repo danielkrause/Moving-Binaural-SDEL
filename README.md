@@ -1,7 +1,11 @@
 
 # Binaural Sound Source Distance Estimation and Localization for a Moving Listener
 
-# add citation
+This is a repository implementing the methods described in the following paper:
+
+D.A. Krause, G. Garcia-Barrios, A. Politis, A. Mesaros, [Binaural Sound Source Distance Estimation and Localization for a Moving Listener](https://ieeexplore.ieee.org/document/10372100)
+
+If you use this repository or the dataset associated with it, kindly consider citing the abovementioned paper.
 
 ## DATASETS
 
@@ -26,5 +30,5 @@ The provided codebase has been tested on Python 3.9 and Torch 1.13
 
 
 ## License
-This repository is an adapted version of [Vue]([https://github.com/vuejs/vue](https://github.com/sharathadavanne/doa-net)).
+This repository is an adapted version of [doa-net](https://github.com/sharathadavanne/doa-net).
 The repository is licensed under the [TAU License](LICENSE.md).
