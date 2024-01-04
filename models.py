@@ -301,7 +301,7 @@ class CRNN_Multi(torch.nn.Module):
         if self.use_binary:
             sde = torch.sigmoid(self.fnn_sde_list[-1](x_rnn))
         else:
-            sde = torch.tanh(self.fnn_sde_list[-1](x_rnn))
+            sde = torch.relu_(self.fnn_sde_list[-1](x_rnn))
 
         return doa, sde
         
