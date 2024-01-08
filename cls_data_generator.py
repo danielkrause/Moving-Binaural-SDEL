@@ -26,11 +26,17 @@ class DataGenerator(object):
 
         self._filenames_list = list()
         self._nb_frames_file = 0     # Using a fixed number of frames in feat files. Updated in _get_label_filenames_sizes()
-        self._nb_mel_bins = self._feat_cls.get_nb_mel_bins()
         self._nb_ch = None
         self._label_len = None  # total length of label - DOA + SED
         self._doa_len = None    # DOA label length
         self._nb_classes = self._feat_cls.get_nb_classes()
+        self._approach = params['approach']
+        if self._approach == 'DOA_class' or self._approach == 'Joint_class':
+            self._fnn_dnn = True
+            self._nb_mel_bins = self._feat_cls.get_nb_mel_bins() + 1
+        else:
+            self._fnn_dnn = False
+            self._nb_mel_bins = self._feat_cls.get_nb_mel_bins()
         self._get_filenames_list_and_feat_label_sizes()
         self._one_per_file = params['one_per_file']
 
@@ -41,6 +47,10 @@ class DataGenerator(object):
         
         self._two_input = params['use_two_input']
         self._use_cnn = params['rot_cnn']
+        self._use_rot = params['use_rot']
+        self._use_trans = params['use_trans']
+        self._use_rot_trans = params['use_rot_trans']
+
 
         if self._per_file:
             self._nb_total_batches = len(self._filenames_list)
@@ -71,12 +81,23 @@ class DataGenerator(object):
 
     def get_data_sizes(self):
         if not self._two_input:
-            feat_shape = (self._batch_size, self._nb_ch, self._feature_seq_len, self._nb_mel_bins)
-        else:
-            if self._use_cnn:
-                feat_shape = [(self._batch_size, self._nb_ch-1, self._feature_seq_len, self._nb_mel_bins),(self._batch_size, 1, self._feature_seq_len, 4)]
+            if not self._fnn_dnn:
+                feat_shape = (self._batch_size, self._nb_ch, self._feature_seq_len, self._nb_mel_bins)
             else:
-                feat_shape = [(self._batch_size, self._nb_ch-1, self._feature_seq_len, self._nb_mel_bins),(self._batch_size, self._feature_seq_len, 4)]
+                feat_shape = (self._batch_size, self._feature_seq_len, self._nb_mel_bins)
+        else:
+            if self._use_rot:
+                nb_rot_feat = 4
+                minus_ch = 1
+            elif self._use_trans:
+                nb_rot_feat = 3
+                minus_ch = 1
+            else:
+                nb_rot_feat = 7
+                minus_ch = 2
+                    
+            feat_shape = [(self._batch_size, self._nb_ch-minus_ch, self._feature_seq_len, self._nb_mel_bins),(self._batch_size, 1, self._feature_seq_len, nb_rot_feat)]
+
         if self._is_eval:
             label_shape = None
         else:
@@ -110,8 +131,6 @@ class DataGenerator(object):
             elif fil_nb in rnd_fifth:
                 split_nb = 5
             feat_filename = '{}{}.npy'.format('binaural',filename.split('.')[0][8:])
-            lab_filename = '{}{}.npy'.format('metadata',feat_filename.split('.')[0][8:])
-            
             if split_nb in self._splits: # check which split the file belongs to
                 self._filenames_list.append(feat_filename)
 
@@ -176,7 +195,9 @@ class DataGenerator(object):
                 if not self._two_input:
                     feat = self._split_in_seqs(feat, self._feature_seq_len)
                     feat = np.transpose(feat, (0, 2, 1, 3))
-    
+                    
+                    if self._fnn_dnn:
+                        feat = np.squeeze(feat)
                     yield feat
                 else:
                     if self._use_cnn:
@@ -235,27 +256,46 @@ class DataGenerator(object):
                     
                 feat = np.reshape(feat, (self._feature_batch_seq_len, self._nb_ch, self._nb_mel_bins))
                 # Split to sequences
-                label_act = label[:, 4]
-                label_dist = label[:, 3]
-                label = label[:, :4]
-                label[:, 0] = label[:, 0]*label_dist
-                label[:, 1] = label[:, 1]*label_dist
-                label[:, 2] = label[:, 2]*label_dist
-                
-                label[:, 3] = label_act
+                # if not self._use_trans and not self._use_rot_trans:
+                #     label_act = label[:, 4]
+                #     label_dist = label[:, 3]
+                #     label = label[:, :4]
+                #     label[:, 0] = label[:, 0]*label_dist
+                #     label[:, 1] = label[:, 1]*label_dist
+                #     label[:, 2] = label[:, 2]*label_dist
+                    
+                #     label[:, 3] = label_act
+
+                    
                 label = self._split_in_seqs(label, self._label_seq_len)
                 
                 if not self._two_input:
                     feat = self._split_in_seqs(feat, self._feature_seq_len)
                     feat = np.transpose(feat, (0, 2, 1, 3))
-
+                    if self._one_per_file:
+                        label = label[:, 5, :]
+                    if self._fnn_dnn:
+                        feat = np.squeeze(feat)
                     yield feat, label
                 else:
                     if self._use_cnn:
-                        feat = self._split_in_seqs(feat, self._feature_seq_len)
-                        feat = np.transpose(feat, (0, 2, 1, 3))
-                        feat_spec = feat[:, :4, :, :]
-                        feat_rot = feat[:, 4, :, :4]
+                        if self._use_trans:
+                            feat = self._split_in_seqs(feat, self._feature_seq_len)
+                            feat = np.transpose(feat, (0, 2, 1, 3))
+                            feat_spec = feat[:, :4, :, :]
+                            feat_rot = feat[:, 4, :, :3]
+                        elif self._use_rot_trans:
+                            feat = self._split_in_seqs(feat, self._feature_seq_len)
+                            feat = np.transpose(feat, (0, 2, 1, 3))
+                            feat_spec = feat[:, :4, :, :]
+                            feat_rot = feat[:, 4, :, :4]
+                            feat_trans = feat[:, 5, :, :3] 
+                            feat_rot = np.concatenate((feat_rot, feat_trans), axis=-1)
+                        else:
+                            feat = self._split_in_seqs(feat, self._feature_seq_len)
+                            feat = np.transpose(feat, (0, 2, 1, 3))
+                            feat_spec = feat[:, :4, :, :]
+                            feat_rot = feat[:, 4, :, :4]
     
                         yield [feat_spec, np.expand_dims(feat_rot,1)], label
                     else:
