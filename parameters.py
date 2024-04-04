@@ -150,16 +150,17 @@ def get_params(argv='1'):
         params['lr'] = 0.001/20.
         params['branch_weights'] = [3., 1.]
         
-    elif argv == '862':  # walking scenario
+    elif argv == '863':
         params['dataset_dir']='/scratch/asignal/krauseda/BinRot/1src_walk/rotation_azi/'
-        params['feat_label_dir']='/scratch/asignal/krauseda/BinRot/1src_walk/rotation_azi/feat_label/'
+        params['feat_label_dir']='/scratch/asignal/krauseda/BinRot/1src_walk/rotation_azi/feat_label_rot_trans/'
         params['unique_classes'] = 1 # maximum number of overlapping sound events
-        params['use_rot'] = True
+        params['use_rot'] = False
         params['use_two_input'] = True
         params['rot_filt'] = 128
         params['rot_cnn'] = True
         params['f_pool_size'] = [4, 4, 4]
         params['merge_mode'] = 'concat'
+        params['use_rot_trans'] = True
         params['lr'] = 0.001/20.
         params['branch_weights'] = [3., 1.]
         
