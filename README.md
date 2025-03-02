@@ -31,5 +31,4 @@ The provided codebase has been tested on Python 3.9 and Torch 1.13
 
 
 ## License
-This repository is an adapted version of [doa-net](https://github.com/sharathadavanne/doa-net).
 The repository is licensed under the [TAU License](LICENSE.md).
